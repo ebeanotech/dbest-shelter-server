@@ -4,8 +4,9 @@ const EntryCode = require("../models/EntryCode");
 const getCode = async (req, res) => {
   const result = await EntryCode.find({});
 
-  let secretCode = result.map((item) => {
-    return item.entrycode;
+  let secretCode;
+  result.map((item) => {
+    secretCode = item.entrycode;
   });
 
   res.status(StatusCodes.CREATED).json({ secretCode });
