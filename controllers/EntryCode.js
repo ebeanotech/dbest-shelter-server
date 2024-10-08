@@ -5,7 +5,7 @@ const getCode = async (req, res) => {
   const result = await EntryCode.find({});
 
   let secretCode;
-  result.map((item) => {
+  result.forEach((item) => {
     secretCode = item.entrycode;
   });
 
