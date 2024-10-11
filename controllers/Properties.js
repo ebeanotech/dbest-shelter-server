@@ -69,11 +69,41 @@ const createProperty = async (req, res) => {
 };
 
 const updateProperty = async (req, res) => {
-  res.send("update Property");
+  const { id } = req.params;
+  const { title, price, description } = req.body;
+
+  try {
+    const item = await Property.findByIdAndUpdate(
+      id,
+      { title, price, description },
+      { new: true, runValidators: true }
+    );
+
+    if (!item) {
+      return res
+        .status(StatusCodes.NOT_FOUND)
+        .json({ msg: "Item not found", success: false });
+    }
+
+    return res.status(StatusCodes.OK).json({ item, success: true });
+  } catch (error) {
+    return res
+      .status(StatusCodes.BAD_REQUEST)
+      .json({ msg: "Invalid data or ID", success: false });
+  }
 };
 
 const deleteProperty = async (req, res) => {
-  res.send("delete Property");
+  const { id } = req.params;
+  const item = await Property.find({ _id: id });
+
+  if (!item) {
+    return res.send("No item matches id");
+  }
+
+  await Property.deleteOne({ _id: id });
+
+  res.status(StatusCodes.OK).json({ msg: "Item deleted", item });
 };
 
 module.exports = {
